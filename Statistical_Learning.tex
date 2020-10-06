@@ -1,0 +1,142 @@
+%%%% acra.tex
+
+\typeout{ACRA Instructions for Authors}
+
+% This is the instructions for authors for ACRA.
+\documentclass{article}
+\usepackage{acra}
+\usepackage{lmodern}% http://ctan.org/pkg/lm
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{url}
+\usepackage{pdfpages}
+\usepackage{fancyhdr}
+\usepackage{subfig}
+\usepackage{listings} 
+\usepackage{selinput}    
+\newcommand{\quotes}[1]{``#1''}
+
+% The file acra.sty is the style file for ACRA. 
+% The file named.sty contains macros for named citations as produced 
+% by named.bst.
+
+% The preparation of these files was supported by Schlumberger Palo Alto
+% Research, AT\&T Bell Laboratories, and Morgan Kaufmann Publishers.
+% Shirley Jowell, of Morgan Kaufmann Publishers, and Peter F.
+% Patel-Schneider, of AT\&T Bell Laboratories collaborated on their
+% preparation. 
+
+% These instructions can be modified and used in other conferences as long
+% as credit to the authors and supporting agencies is retained, this notice
+% is not changed, and further modification or reuse is not restricted.
+% Neither Shirley Jowell nor Peter F. Patel-Schneider can be listed as
+% contacts for providing assistance without their prior permission.
+
+% To use for other conferences, change references to files and the
+% conference appropriate and use other authors, contacts, publishers, and
+% organizations.
+% Also change the deadline and address for returning papers and the length and
+% page charge instructions.
+% Put where the files are available in the appropriate places.
+
+\title{An Overview of Statistical Learning Theory}
+\author{Diego Garrido}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Function Estimation Model}
+
+
+The autor describe that a model of learning from examples can be conducted in the general statistical framework of minimizing expected loss given data.
+
+The model of learning from examples considers:
+\begin{enumerate}
+    \item A unknown distribution $P(x)$ called the generator, which draws independent random vectors $x$. 
+    \item A unknown conditional distribution $P(y|x)$ called the supervisor, which draw an output vector $y$ given input vector $x$.
+    \item A learning machine capable of implementing a set of functions $f(x,\alpha), \alpha \in \Lambda$.
+\end{enumerate}
+
+The problem is choose the function from the set of function $f(x,\alpha), \alpha \in \Lambda$ with best performance, i.e, the one which predicts the supervisor's responese in the best possible way. This selection is based on a training set of $l$ random idepedent identically distributed (i.i.d.) observations drawn according to the join probability $P(x,y) = P(x)P(y|x)$.
+
+\begin{align}
+    (x_{1}, y_{1}), \ldots, (x_{l}, y_{l})
+\end{align}
+
+\section{Risk Minimization}
+
+To choose the best function from the set of function $f(x,\alpha), \alpha \in \Lambda$, one measures the loss $L(y,f(x, \alpha))$ between the output $y$ given the input $x$ and $f(x,\alpha)$. Then one can consider the following risk functional:
+\begin{align}
+    R(\alpha) = \int L(y, f(x,\alpha))dP(x,y), \; \alpha \in \Lambda
+\end{align}
+
+The functional $R(\alpha)$ measures the expected loss between the response $y$ given input $x$ an the response $f(x,\alpha)$ given $\alpha$. The goal is to find the functión $f(x, \alpha_{0})$ which minimizes the risk functional $R(\alpha), \alpha \in \Lambda$, i.e, over the set of functions $f(x, \alpha), \alpha \in \Lambda$, in the situation where the join probability distributión $P(x,y)$ is unknown, but a training set is given (1).
+
+\section{The Problem of Pattern Recognition}
+
+Let the supervisor's output take on only two values $y\in\{0,1\}$ and let $f(x,\alpha), \alpha\in \Lambda$, be a set of indicator functions (functions which take on only two values zero and one). Consider the following loss function:
+
+\begin{align}
+L(y, f(x,\alpha)) = \begin{cases}
+    0 \; \text{if} \;y=f(x,\alpha)\\
+    1 \; \text{if} \;y\neq f(x,\alpha)
+\end{cases} 
+\end{align}
+
+So the expected loss can be written as
+
+\begin{align}
+    \mathbb{E}(L(x, f(x,\alpha)))=\mathbb{E}(\mathbb{I}_{\{y\neq f(x,\alpha)\}})=P(y\neq f(x,\alpha))
+\end{align}
+
+then $R(\alpha) = P(y\neq f(x,\alpha))$, that means the risk functional (2) provides the probability of classification error, i.e, when the answer $y$ given by supervisor an the answers given by indicator function $f(x,\alpha)$ differ.
+
+\section{Empirical risk}
+
+The general setting of the learning problem can be described as follows. Let the probability measure $P(z)$ be defined on the space $Z$. Consider the set of functions $Q(z,\alpha), \alpha \in \Lambda$. The goal is: to minimize the risk functional 
+
+\begin{align}
+    R(\alpha) = \int Q(z,\alpha)dP(z), \; \alpha \in \Lambda
+\end{align}
+if probability measure $P(z)$ is unknown but an i.i.d. sample is given
+
+\begin{align}
+    z_{1}, \ldots, z_{l}
+\end{align}
+
+The empirical risk functional replace the expected risk functinoal $R(\alpha)$ by
+
+\begin{align}
+R_{emp}(\alpha) = \frac{1}{l}\sum_{i=1}^{l}Q(z,\alpha)
+\end{align}
+
+based in the training set (6). 
+
+According to law of large numbers a collection of $z_{1}, z_{2}, \ldots, z_{l}$ i.i.d. samples, the arithmetic mean converges to the expected value when $l\rightarrow \infty$ and the approximation is better the larger the data set. The empirical risk functional correspond to the Montel Carlo approximation of the expected value of $Q(z,\alpha)$ using the empirical distribution of $\{Q(z_{i}, \alpha)\}_{i=1}^{l}$. It is a good approximation because it is based on the idea of law of large numbers, where the sequence $Q(z_{1},\alpha), \ldots, Q(z_{l},\alpha)$ is a sequence of i.i.d. random variables, such that the sample mean of this sequence converges in probability to $\mathbb{E}(Q(z,\alpha))$. \\
+
+
+\section{Density estimation}
+To estimate a density function from a given set of functions $p(x,\alpha), \alpha\in \Lambda$ one can use the loss function $L(p(x,\alpha))=-ln \;p(x,\alpha)$. Putting this loss into (7) one obtains  
+
+\begin{align}
+    R_{emp}(\alpha) = -\frac{1}{l}\sum_{i=1}^{l}ln\;p(x_{i},\alpha)
+\end{align}
+
+minimizing this functional is equivalent to minimizing the negative log-likelihood, which is equivalent to the maximum likelihood method.
+
+\section{The four parts of learning theory}
+
+The four parts of learning theory are:
+\begin{enumerate}
+    \item The theory of consistency of learning processes. This is related to the necessary and sufficient conditions for convergence in probability of the values of risk $R(\alpha_{l})$ and the empirical risks $R_{emp}(\alpha_{l})$ to the minimal possible value of the risk $R(\alpha_{0})$.
+    \item The nonasymptotic theory of the rate of convergence of learning processes. This refer to how fast the sequence of smallest empirical risk values converge to the smallest actual risk.
+    \item The theory of controlling the generalization of learning processes. This is related to control the rate of generalization of the learning machine.
+    \item The theory of constructing learning algorithms. This topic attempt to build algorithms that can control the rate of generalzation.
+\end{enumerate}
+
+\end{document}
