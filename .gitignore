@@ -1,3 +1,6 @@
 *.ipynb_checkpoints
-2_Tarea_MCMC.pdf
-Bayesian_Normal.pdf
+#latex
+*.aux
+*.log
+*.gz
+*.out
